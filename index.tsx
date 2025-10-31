@@ -2674,7 +2674,7 @@ const App = () => {
           }}
           onClick={() => setActiveTab("dashboard")}
         >
-          Quản lý Tập đoàn
+          Quản lý tập đoàn
         </button>
         <button
           style={{
@@ -2683,7 +2683,7 @@ const App = () => {
           }}
           onClick={() => setActiveTab("reference")}
         >
-          Trung tâm Tra cứu
+          Trung tâm tra cứu
         </button>
         <button
           style={{
@@ -2692,7 +2692,7 @@ const App = () => {
           }}
           onClick={() => setActiveTab("tools")}
         >
-          Công cụ Hỗ trợ
+          Công cụ hỗ trợ
         </button>
       </nav>
       <div>{renderTabContent()}</div>
