@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import { createRoot } from "react-dom/client";
 
-// --- DATA MẪU CHO TRÒ CHƠI ---
 const PROPERTIES = [
   // Thị trường Độc quyền
   {
@@ -1153,7 +1152,7 @@ const DebtAndCollateralManager = ({
 
   return (
     <div style={styles.widget}>
-      <h2 style={styles.widgetTitle}>📜 Hồ sơ Nợ & Cầm cố</h2>
+      <h2 style={styles.widgetTitle}>Hồ sơ Nợ & Cầm cố</h2>
 
       <form onSubmit={handleAddLoan}>
         <div style={styles.formGrid}>
@@ -1260,7 +1259,7 @@ const DebtAndCollateralManager = ({
                       style={{ ...styles.button, ...styles.dangerButton }}
                       onClick={() => handleRepayLoan(loan)}
                     >
-                      💰 Trả nợ
+                      Trả nợ
                     </button>
                   </td>
                 </tr>
@@ -1356,7 +1355,7 @@ const ConversionManager = ({ playerState, setPlayerState, addLogEntry }) => {
 
   return (
     <div style={styles.widget}>
-      <h2 style={styles.widgetTitle}>💱 Công cụ Quy đổi Tài sản</h2>
+      <h2 style={styles.widgetTitle}>Công cụ Quy đổi Tài sản</h2>
       <div
         style={{
           ...styles.formGrid,
@@ -1564,7 +1563,7 @@ const CEO_Dashboard = ({ playerState, setPlayerState, addLogEntry }) => {
   return (
     <div>
       <div style={styles.widget}>
-        <h2 style={styles.widgetTitle}>📊 Bảng Điều Khiển Tài Sản</h2>
+        <h2 style={styles.widgetTitle}>Bảng Quản Lý Tài Sản</h2>
         <div
           style={{
             ...styles.grid,
@@ -1613,7 +1612,7 @@ const CEO_Dashboard = ({ playerState, setPlayerState, addLogEntry }) => {
       />
 
       <div style={styles.widget}>
-        <h2 style={styles.widgetTitle}>🚀 Hành động Chiến lược</h2>
+        <h2 style={styles.widgetTitle}>Hành động Chiến lược</h2>
         <p>
           Sử dụng tài nguyên để thực hiện các nước đi chiến lược quan trọng,
           giành lấy Điểm Thống trị Toàn cầu.
@@ -1632,7 +1631,7 @@ const CEO_Dashboard = ({ playerState, setPlayerState, addLogEntry }) => {
       </div>
 
       <div style={styles.widget}>
-        <h2 style={styles.widgetTitle}>💰 Lợi Nhuận Vòng</h2>
+        <h2 style={styles.widgetTitle}>Lợi Nhuận Vòng</h2>
         <p>Lương cơ bản: 200 USD, 10 DATA</p>
         <p>
           Thu nhập từ tài sản: {roundIncome.usd} USD, {roundIncome.data} DATA
@@ -1670,7 +1669,7 @@ const CEO_Dashboard = ({ playerState, setPlayerState, addLogEntry }) => {
 
 const InfrastructureBonusTable = ({ gameMode }) => (
   <div style={styles.widget}>
-    <h2 style={styles.widgetTitle}>🎁 Bonus Tích hợp Hạ tầng & Mạng lưới</h2>
+    <h2 style={styles.widgetTitle}>Tích hợp Hạ tầng & Mạng lưới</h2>
     <table style={styles.propertyTable}>
       <thead>
         <tr>
@@ -1711,7 +1710,7 @@ const InfrastructureBonusTable = ({ gameMode }) => (
 
 const FinancialCapitalTable = ({ gameMode }) => (
   <div style={styles.widget}>
-    <h2 style={styles.widgetTitle}>🏦 Ô Tài chính & Tư bản</h2>
+    <h2 style={styles.widgetTitle}>Ô Tài chính & Tư bản</h2>
     <table style={styles.propertyTable}>
       <thead>
         <tr>
@@ -1758,7 +1757,7 @@ const FinancialCapitalTable = ({ gameMode }) => (
 
 const GovernmentRegulationTable = ({ gameMode }) => (
   <div style={styles.widget}>
-    <h2 style={styles.widgetTitle}>🏛️ Ô Chính phủ & Quy chế</h2>
+    <h2 style={styles.widgetTitle}>Ô Chính phủ & Quy chế</h2>
     <table style={styles.propertyTable}>
       <thead>
         <tr>
@@ -1805,7 +1804,7 @@ const GovernmentRegulationTable = ({ gameMode }) => (
 
 const GlobalStrategyTable = ({ gameMode }) => (
   <div style={styles.widget}>
-    <h2 style={styles.widgetTitle}>🌍 Ô Chiến lược Toàn cầu</h2>
+    <h2 style={styles.widgetTitle}>Ô Chiến lược Toàn cầu</h2>
     <table style={styles.propertyTable}>
       <thead>
         <tr>
@@ -1852,7 +1851,7 @@ const GlobalStrategyTable = ({ gameMode }) => (
 
 const InvestigationTable = ({ gameMode, onApplyPenalty }) => (
   <div style={styles.widget}>
-    <h2 style={styles.widgetTitle}>🕵️ Ô Điều tra & Khủng hoảng</h2>
+    <h2 style={styles.widgetTitle}>Ô Điều tra & Khủng hoảng</h2>
     <table style={styles.propertyTable}>
       <thead>
         <tr>
@@ -2182,7 +2181,7 @@ const Reference_Hub = ({
         onConfirm={handleConfirmPenalty}
       />
       <div style={styles.widget}>
-        <h2 style={styles.widgetTitle}>🏢 Danh mục Tài sản Doanh nghiệp</h2>
+        <h2 style={styles.widgetTitle}>Danh mục Tài sản Doanh nghiệp</h2>
         <table style={styles.propertyTable}>
           <thead>
             <tr>
@@ -2302,7 +2301,7 @@ const Reference_Hub = ({
         />
       </div>
       <div style={styles.widget}>
-        <h2 style={styles.widgetTitle}>📜 Quy tắc & Điều kiện</h2>
+        <h2 style={styles.widgetTitle}>Quy tắc & Điều kiện</h2>
         <div style={styles.grid}>
           <div>
             <h3>Điều kiện Thắng</h3>
@@ -2424,7 +2423,7 @@ const Tools = ({ log, addLogEntry }) => {
   return (
     <div style={styles.grid}>
       <div style={styles.widget}>
-        <h2 style={styles.widgetTitle}>🧮 Máy tính cầm tay</h2>
+        <h2 style={styles.widgetTitle}>Máy tính cầm tay</h2>
         <div style={styles.calculator}>
           <div style={styles.calculatorDisplay}>{displayValue}</div>
           <div style={styles.calculatorKeys}>
@@ -2494,7 +2493,7 @@ const Tools = ({ log, addLogEntry }) => {
         </div>
       </div>
       <div style={styles.widget}>
-        <h2 style={styles.widgetTitle}>📝 Nhật ký Giao dịch</h2>
+        <h2 style={styles.widgetTitle}>Nhật ký Giao dịch</h2>
         <input
           type="text"
           placeholder="Ghi chú thủ công..."
@@ -2606,14 +2605,14 @@ const App = () => {
         </div>
         <div style={styles.headerControls}>
           <ToggleSwitch
-            label={gameMode === "politics" ? "🏛️ Politics" : "🎮 Game"}
+            label={gameMode === "politics" ? "Politics" : "Game"}
             isChecked={gameMode === "politics"}
             onChange={() =>
               setGameMode((prev) => (prev === "politics" ? "game" : "politics"))
             }
           />
           <ToggleSwitch
-            label={theme === "dark" ? "🌙 Dark" : "☀️ Light"}
+            label={theme === "dark" ? "Dark" : "Light"}
             isChecked={theme === "light"}
             onChange={() =>
               setTheme((prev) => (prev === "dark" ? "light" : "dark"))
