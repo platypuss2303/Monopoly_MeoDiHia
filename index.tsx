@@ -593,6 +593,22 @@ const WIN_CONDITIONS = {
   ],
 };
 
+const useMediaQuery = (query) => {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) {
+      setMatches(media.matches);
+    }
+    const listener = () => setMatches(media.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, [matches, query]);
+
+  return matches;
+};
+
 // --- STYLES ---
 const styles: { [key: string]: CSSProperties } = {
   container: { maxWidth: "1200px", margin: "0 auto", padding: "1rem" },
@@ -635,7 +651,7 @@ const styles: { [key: string]: CSSProperties } = {
     gap: "1rem",
   },
   tabButton: {
-    background: "var(--secondary-color)",
+    backgroundColor: "var(--secondary-color)",
     color: "var(--text-color)",
     border: "1px solid var(--border-color)",
     padding: "10px 20px",
@@ -894,6 +910,12 @@ const styles: { [key: string]: CSSProperties } = {
 };
 
 // --- COMPONENTS ---
+const ResponsiveTable = ({ children }) => (
+  <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+    {children}
+  </div>
+);
+
 const ToggleSwitch = ({ label, isChecked, onChange }) => {
   return (
     <div style={styles.toggleWrapper}>
@@ -1215,59 +1237,63 @@ const DebtAndCollateralManager = ({
       </form>
 
       <h3 style={{ marginTop: "2rem" }}>Các khoản nợ hiện tại</h3>
-      <table style={styles.propertyTable}>
-        <thead>
-          <tr>
-            <th style={styles.th}>Nguồn vay</th>
-            <th style={styles.th}>Số tiền vay</th>
-            <th style={styles.th}>Lãi suất</th>
-            <th style={styles.th}>Tài sản cầm cố</th>
-            <th style={styles.th}>Lãi vòng sau</th>
-            <th style={styles.th}>Hành động</th>
-          </tr>
-        </thead>
-        <tbody>
-          {playerState.loans.length === 0 ? (
+      <ResponsiveTable>
+        <table style={styles.propertyTable}>
+          <thead>
             <tr>
-              <td colSpan={6} style={{ ...styles.td, textAlign: "center" }}>
-                Không có khoản nợ nào.
-              </td>
+              <th style={styles.th}>Nguồn vay</th>
+              <th style={styles.th}>Số tiền vay</th>
+              <th style={styles.th}>Lãi suất</th>
+              <th style={styles.th}>Tài sản cầm cố</th>
+              <th style={styles.th}>Lãi vòng sau</th>
+              <th style={styles.th}>Hành động</th>
             </tr>
-          ) : (
-            playerState.loans.map((loan) => {
-              const collateralAsset = playerState.properties.find(
-                (p) => p.id === loan.collateralAssetId
-              );
-              const interestDue = Math.round(
-                loan.amount * (loan.interestRate / 100)
-              );
-              return (
-                <tr key={loan.id}>
-                  <td style={styles.td}>{loan.source}</td>
-                  <td style={styles.td}>{loan.amount.toLocaleString()} USD</td>
-                  <td style={styles.td}>{loan.interestRate}%</td>
-                  <td style={styles.td}>
-                    {collateralAsset ? collateralAsset.name : "Không có"}
-                  </td>
-                  <td style={styles.td}>
-                    <span style={{ color: "var(--danger-color)" }}>
-                      {interestDue.toLocaleString()} USD
-                    </span>
-                  </td>
-                  <td style={styles.td}>
-                    <button
-                      style={{ ...styles.button, ...styles.dangerButton }}
-                      onClick={() => handleRepayLoan(loan)}
-                    >
-                      Trả nợ
-                    </button>
-                  </td>
-                </tr>
-              );
-            })
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {playerState.loans.length === 0 ? (
+              <tr>
+                <td colSpan={6} style={{ ...styles.td, textAlign: "center" }}>
+                  Không có khoản nợ nào.
+                </td>
+              </tr>
+            ) : (
+              playerState.loans.map((loan) => {
+                const collateralAsset = playerState.properties.find(
+                  (p) => p.id === loan.collateralAssetId
+                );
+                const interestDue = Math.round(
+                  loan.amount * (loan.interestRate / 100)
+                );
+                return (
+                  <tr key={loan.id}>
+                    <td style={styles.td}>{loan.source}</td>
+                    <td style={styles.td}>
+                      {loan.amount.toLocaleString()} USD
+                    </td>
+                    <td style={styles.td}>{loan.interestRate}%</td>
+                    <td style={styles.td}>
+                      {collateralAsset ? collateralAsset.name : "Không có"}
+                    </td>
+                    <td style={styles.td}>
+                      <span style={{ color: "var(--danger-color)" }}>
+                        {interestDue.toLocaleString()} USD
+                      </span>
+                    </td>
+                    <td style={styles.td}>
+                      <button
+                        style={{ ...styles.button, ...styles.dangerButton }}
+                        onClick={() => handleRepayLoan(loan)}
+                      >
+                        Trả nợ
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </ResponsiveTable>
     </div>
   );
 };
@@ -1278,6 +1304,7 @@ const ConversionManager = ({ playerState, setPlayerState, addLogEntry }) => {
   const [fromAmount, setFromAmount] = useState("");
   const [toAmount, setToAmount] = useState("0");
   const [rateInfo, setRateInfo] = useState("");
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const ASSET_MAP = {
     USD: { name: "USD", value: playerState.usd },
@@ -1359,7 +1386,9 @@ const ConversionManager = ({ playerState, setPlayerState, addLogEntry }) => {
       <div
         style={{
           ...styles.formGrid,
-          gridTemplateColumns: "2fr 1fr 2fr 2fr 1fr",
+          gridTemplateColumns: isMobile
+            ? "repeat(2, 1fr)"
+            : "2fr 1fr 2fr 2fr 1fr",
           alignItems: "center",
           gap: "1rem",
         }}
@@ -1423,6 +1452,7 @@ const ConversionManager = ({ playerState, setPlayerState, addLogEntry }) => {
             ...styles.button,
             alignSelf: "flex-end",
             padding: "10px 15px",
+            gridColumn: isMobile ? "span 2" : "auto",
           }}
         >
           Quy đổi
@@ -1670,227 +1700,239 @@ const CEO_Dashboard = ({ playerState, setPlayerState, addLogEntry }) => {
 const InfrastructureBonusTable = ({ gameMode }) => (
   <div style={styles.widget}>
     <h2 style={styles.widgetTitle}>Tích hợp Hạ tầng & Mạng lưới</h2>
-    <table style={styles.propertyTable}>
-      <thead>
-        <tr>
-          <th style={styles.th}>Tên Hạ tầng/Mạng lưới</th>
-          <th style={styles.th}>Bonus Tích hợp</th>
-          <th style={styles.th}>Tác dụng trong Gameplay</th>
-          {gameMode === "politics" && (
-            <th style={styles.th}>Phản ánh Lý luận</th>
-          )}
-        </tr>
-      </thead>
-      <tbody>
-        {INFRASTRUCTURE_BONUSES.map((bonus, index) => (
-          <tr key={`bonus-${index}`}>
-            <td style={{ ...styles.td, width: "20%" }}>{bonus.name}</td>
-            <td style={{ ...styles.td, width: "20%" }}>
-              <strong>{bonus.bonus}</strong>
-            </td>
-            <td
-              style={{
-                ...styles.td,
-                width: gameMode === "politics" ? "30%" : "60%",
-              }}
-            >
-              {bonus.effect}
-            </td>
+    <ResponsiveTable>
+      <table style={styles.propertyTable}>
+        <thead>
+          <tr>
+            <th style={styles.th}>Tên Hạ tầng/Mạng lưới</th>
+            <th style={styles.th}>Bonus Tích hợp</th>
+            <th style={styles.th}>Tác dụng trong Gameplay</th>
             {gameMode === "politics" && (
-              <td style={{ ...styles.td, width: "30%", fontStyle: "italic" }}>
-                {bonus.reasoning}
-              </td>
+              <th style={styles.th}>Phản ánh Lý luận</th>
             )}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {INFRASTRUCTURE_BONUSES.map((bonus, index) => (
+            <tr key={`bonus-${index}`}>
+              <td style={{ ...styles.td, width: "20%" }}>{bonus.name}</td>
+              <td style={{ ...styles.td, width: "20%" }}>
+                <strong>{bonus.bonus}</strong>
+              </td>
+              <td
+                style={{
+                  ...styles.td,
+                  width: gameMode === "politics" ? "30%" : "60%",
+                }}
+              >
+                {bonus.effect}
+              </td>
+              {gameMode === "politics" && (
+                <td style={{ ...styles.td, width: "30%", fontStyle: "italic" }}>
+                  {bonus.reasoning}
+                </td>
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </ResponsiveTable>
   </div>
 );
 
 const FinancialCapitalTable = ({ gameMode }) => (
   <div style={styles.widget}>
     <h2 style={styles.widgetTitle}>Ô Tài chính & Tư bản</h2>
-    <table style={styles.propertyTable}>
-      <thead>
-        <tr>
-          <th style={styles.th}>Tên Ô</th>
-          <th style={styles.th}>Chi Phí (USD)</th>
-          <th style={styles.th}>Chức năng Cốt lõi</th>
-          <th style={styles.th}>Cơ chế Chi tiết</th>
-          {gameMode === "politics" && (
-            <th style={styles.th}>Phản ánh Lý luận</th>
-          )}
-        </tr>
-      </thead>
-      <tbody>
-        {FINANCIAL_SQUARES.map((square, index) => (
-          <tr key={`financial-${index}`}>
-            <td style={{ ...styles.td, width: "15%" }}>
-              <strong>{square.name}</strong>
-            </td>
-            <td style={{ ...styles.td, width: "10%", textAlign: "center" }}>
-              {square.cost}
-            </td>
-            <td style={{ ...styles.td, width: "20%" }}>
-              {square.coreFunction}
-            </td>
-            <td
-              style={{
-                ...styles.td,
-                width: gameMode === "politics" ? "35%" : "55%",
-              }}
-            >
-              {square.mechanism}
-            </td>
+    <ResponsiveTable>
+      <table style={styles.propertyTable}>
+        <thead>
+          <tr>
+            <th style={styles.th}>Tên Ô</th>
+            <th style={styles.th}>Chi Phí (USD)</th>
+            <th style={styles.th}>Chức năng Cốt lõi</th>
+            <th style={styles.th}>Cơ chế Chi tiết</th>
             {gameMode === "politics" && (
-              <td style={{ ...styles.td, width: "20%", fontStyle: "italic" }}>
-                {square.reasoning}
-              </td>
+              <th style={styles.th}>Phản ánh Lý luận</th>
             )}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {FINANCIAL_SQUARES.map((square, index) => (
+            <tr key={`financial-${index}`}>
+              <td style={{ ...styles.td, width: "15%" }}>
+                <strong>{square.name}</strong>
+              </td>
+              <td style={{ ...styles.td, width: "10%", textAlign: "center" }}>
+                {square.cost}
+              </td>
+              <td style={{ ...styles.td, width: "20%" }}>
+                {square.coreFunction}
+              </td>
+              <td
+                style={{
+                  ...styles.td,
+                  width: gameMode === "politics" ? "35%" : "55%",
+                }}
+              >
+                {square.mechanism}
+              </td>
+              {gameMode === "politics" && (
+                <td style={{ ...styles.td, width: "20%", fontStyle: "italic" }}>
+                  {square.reasoning}
+                </td>
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </ResponsiveTable>
   </div>
 );
 
 const GovernmentRegulationTable = ({ gameMode }) => (
   <div style={styles.widget}>
     <h2 style={styles.widgetTitle}>Ô Chính phủ & Quy chế</h2>
-    <table style={styles.propertyTable}>
-      <thead>
-        <tr>
-          <th style={styles.th}>Tên Ô</th>
-          <th style={styles.th}>Chi Phí (USD)</th>
-          <th style={styles.th}>Chức năng Cốt lõi</th>
-          <th style={styles.th}>Cơ chế Chi tiết</th>
-          {gameMode === "politics" && (
-            <th style={styles.th}>Phản ánh Lý luận</th>
-          )}
-        </tr>
-      </thead>
-      <tbody>
-        {GOVERNMENT_SQUARES.map((square, index) => (
-          <tr key={`gov-${index}`}>
-            <td style={{ ...styles.td, width: "15%" }}>
-              <strong>{square.name}</strong>
-            </td>
-            <td style={{ ...styles.td, width: "10%", textAlign: "center" }}>
-              {square.cost}
-            </td>
-            <td style={{ ...styles.td, width: "20%" }}>
-              {square.coreFunction}
-            </td>
-            <td
-              style={{
-                ...styles.td,
-                width: gameMode === "politics" ? "35%" : "55%",
-              }}
-            >
-              {square.mechanism}
-            </td>
+    <ResponsiveTable>
+      <table style={styles.propertyTable}>
+        <thead>
+          <tr>
+            <th style={styles.th}>Tên Ô</th>
+            <th style={styles.th}>Chi Phí (USD)</th>
+            <th style={styles.th}>Chức năng Cốt lõi</th>
+            <th style={styles.th}>Cơ chế Chi tiết</th>
             {gameMode === "politics" && (
-              <td style={{ ...styles.td, width: "20%", fontStyle: "italic" }}>
-                {square.reasoning}
-              </td>
+              <th style={styles.th}>Phản ánh Lý luận</th>
             )}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {GOVERNMENT_SQUARES.map((square, index) => (
+            <tr key={`gov-${index}`}>
+              <td style={{ ...styles.td, width: "15%" }}>
+                <strong>{square.name}</strong>
+              </td>
+              <td style={{ ...styles.td, width: "10%", textAlign: "center" }}>
+                {square.cost}
+              </td>
+              <td style={{ ...styles.td, width: "20%" }}>
+                {square.coreFunction}
+              </td>
+              <td
+                style={{
+                  ...styles.td,
+                  width: gameMode === "politics" ? "35%" : "55%",
+                }}
+              >
+                {square.mechanism}
+              </td>
+              {gameMode === "politics" && (
+                <td style={{ ...styles.td, width: "20%", fontStyle: "italic" }}>
+                  {square.reasoning}
+                </td>
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </ResponsiveTable>
   </div>
 );
 
 const GlobalStrategyTable = ({ gameMode }) => (
   <div style={styles.widget}>
     <h2 style={styles.widgetTitle}>Ô Chiến lược Toàn cầu</h2>
-    <table style={styles.propertyTable}>
-      <thead>
-        <tr>
-          <th style={styles.th}>Tên Ô</th>
-          <th style={styles.th}>Chi Phí</th>
-          <th style={styles.th}>Chức năng Cốt lõi</th>
-          <th style={styles.th}>Cơ chế Chi tiết</th>
-          {gameMode === "politics" && (
-            <th style={styles.th}>Phản ánh Lý luận</th>
-          )}
-        </tr>
-      </thead>
-      <tbody>
-        {GLOBAL_STRATEGY_SQUARES.map((square, index) => (
-          <tr key={`strategy-${index}`}>
-            <td style={{ ...styles.td, width: "15%" }}>
-              <strong>{square.name}</strong>
-            </td>
-            <td style={{ ...styles.td, width: "15%", textAlign: "center" }}>
-              {square.cost}
-            </td>
-            <td style={{ ...styles.td, width: "20%" }}>
-              {square.coreFunction}
-            </td>
-            <td
-              style={{
-                ...styles.td,
-                width: gameMode === "politics" ? "30%" : "50%",
-              }}
-            >
-              {square.mechanism}
-            </td>
+    <ResponsiveTable>
+      <table style={styles.propertyTable}>
+        <thead>
+          <tr>
+            <th style={styles.th}>Tên Ô</th>
+            <th style={styles.th}>Chi Phí</th>
+            <th style={styles.th}>Chức năng Cốt lõi</th>
+            <th style={styles.th}>Cơ chế Chi tiết</th>
             {gameMode === "politics" && (
-              <td style={{ ...styles.td, width: "20%", fontStyle: "italic" }}>
-                {square.reasoning}
-              </td>
+              <th style={styles.th}>Phản ánh Lý luận</th>
             )}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {GLOBAL_STRATEGY_SQUARES.map((square, index) => (
+            <tr key={`strategy-${index}`}>
+              <td style={{ ...styles.td, width: "15%" }}>
+                <strong>{square.name}</strong>
+              </td>
+              <td style={{ ...styles.td, width: "15%", textAlign: "center" }}>
+                {square.cost}
+              </td>
+              <td style={{ ...styles.td, width: "20%" }}>
+                {square.coreFunction}
+              </td>
+              <td
+                style={{
+                  ...styles.td,
+                  width: gameMode === "politics" ? "30%" : "50%",
+                }}
+              >
+                {square.mechanism}
+              </td>
+              {gameMode === "politics" && (
+                <td style={{ ...styles.td, width: "20%", fontStyle: "italic" }}>
+                  {square.reasoning}
+                </td>
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </ResponsiveTable>
   </div>
 );
 
 const InvestigationTable = ({ gameMode, onApplyPenalty }) => (
   <div style={styles.widget}>
     <h2 style={styles.widgetTitle}>Ô Điều tra & Khủng hoảng</h2>
-    <table style={styles.propertyTable}>
-      <thead>
-        <tr>
-          <th style={styles.th}>Tên Ô Khủng hoảng</th>
-          <th style={styles.th}>Loại Ô</th>
-          <th style={styles.th}>Chức Năng Chính (Khi dừng)</th>
-          <th style={styles.th}>Mức Phạt/Tác động Cơ bản</th>
-          {gameMode === "politics" && (
-            <th style={styles.th}>Phản ánh Lý luận</th>
-          )}
-          <th style={styles.th}>Hành động</th>
-        </tr>
-      </thead>
-      <tbody>
-        {INVESTIGATION_SQUARES.map((square, index) => (
-          <tr key={`investigation-${index}`}>
-            <td style={{ ...styles.td, width: "20%" }}>
-              <strong>{square.name}</strong>
-            </td>
-            <td style={{ ...styles.td, width: "10%" }}>{square.type}</td>
-            <td style={{ ...styles.td, width: "25%" }}>{square.function}</td>
-            <td style={{ ...styles.td, width: "20%" }}>{square.impactText}</td>
+    <ResponsiveTable>
+      <table style={styles.propertyTable}>
+        <thead>
+          <tr>
+            <th style={styles.th}>Tên Ô Khủng hoảng</th>
+            <th style={styles.th}>Loại Ô</th>
+            <th style={styles.th}>Chức Năng Chính (Khi dừng)</th>
+            <th style={styles.th}>Mức Phạt/Tác động Cơ bản</th>
             {gameMode === "politics" && (
-              <td style={{ ...styles.td, width: "25%", fontStyle: "italic" }}>
-                {square.reasoning}
-              </td>
+              <th style={styles.th}>Phản ánh Lý luận</th>
             )}
-            <td style={{ ...styles.td, textAlign: "center" }}>
-              <button
-                style={{ ...styles.button, ...styles.dangerButton }}
-                onClick={() => onApplyPenalty(square)}
-              >
-                Áp dụng Phạt
-              </button>
-            </td>
+            <th style={styles.th}>Hành động</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {INVESTIGATION_SQUARES.map((square, index) => (
+            <tr key={`investigation-${index}`}>
+              <td style={{ ...styles.td, width: "20%" }}>
+                <strong>{square.name}</strong>
+              </td>
+              <td style={{ ...styles.td, width: "10%" }}>{square.type}</td>
+              <td style={{ ...styles.td, width: "25%" }}>{square.function}</td>
+              <td style={{ ...styles.td, width: "20%" }}>
+                {square.impactText}
+              </td>
+              {gameMode === "politics" && (
+                <td style={{ ...styles.td, width: "25%", fontStyle: "italic" }}>
+                  {square.reasoning}
+                </td>
+              )}
+              <td style={{ ...styles.td, textAlign: "center" }}>
+                <button
+                  style={{ ...styles.button, ...styles.dangerButton }}
+                  onClick={() => onApplyPenalty(square)}
+                >
+                  Áp dụng Phạt
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </ResponsiveTable>
   </div>
 );
 
@@ -2182,100 +2224,103 @@ const Reference_Hub = ({
       />
       <div style={styles.widget}>
         <h2 style={styles.widgetTitle}>Danh mục Tài sản Doanh nghiệp</h2>
-        <table style={styles.propertyTable}>
-          <thead>
-            <tr>
-              <th style={styles.th}>Sở hữu</th>
-              <th style={styles.th}>Tên</th>
-              <th style={styles.th}>Loại</th>
-              <th style={styles.th}>Chi phí (USD)</th>
-              <th style={styles.th}>Lợi nhuận / Ảnh hưởng</th>
-              <th style={styles.th}>Phí Thuê</th>
-            </tr>
-          </thead>
-          <tbody>
-            {playerState.properties.map((p) => {
-              const rent = p.rent;
-              let rentText = "";
-              if (rent) {
-                if (typeof rent === "number") {
-                  rentText = `${rent.toLocaleString()} USD`;
-                } else if (typeof rent === "object" && rent !== null) {
-                  const parts = [];
-                  if (rent.usd) parts.push(`${rent.usd.toLocaleString()} USD`);
-                  if (rent.data)
-                    parts.push(`${rent.data.toLocaleString()} DATA`);
-                  rentText = parts.join(" & ");
+        <ResponsiveTable>
+          <table style={styles.propertyTable}>
+            <thead>
+              <tr>
+                <th style={styles.th}>Sở hữu</th>
+                <th style={styles.th}>Tên</th>
+                <th style={styles.th}>Loại</th>
+                <th style={styles.th}>Chi phí (USD)</th>
+                <th style={styles.th}>Lợi nhuận / Ảnh hưởng</th>
+                <th style={styles.th}>Phí Thuê</th>
+              </tr>
+            </thead>
+            <tbody>
+              {playerState.properties.map((p) => {
+                const rent = p.rent;
+                let rentText = "";
+                if (rent) {
+                  if (typeof rent === "number") {
+                    rentText = `${rent.toLocaleString()} USD`;
+                  } else if (typeof rent === "object" && rent !== null) {
+                    const parts = [];
+                    if (rent.usd)
+                      parts.push(`${rent.usd.toLocaleString()} USD`);
+                    if (rent.data)
+                      parts.push(`${rent.data.toLocaleString()} DATA`);
+                    rentText = parts.join(" & ");
+                  }
                 }
-              }
 
-              return (
-                <tr
-                  key={p.id}
-                  style={{
-                    backgroundColor: p.mortgaged
-                      ? "rgba(248, 81, 73, 0.1)"
-                      : "transparent",
-                  }}
-                >
-                  <td style={styles.td}>
-                    <input
-                      type="checkbox"
-                      style={styles.ownedCheckbox}
-                      checked={p.owned}
-                      onChange={() => handleOwnershipChange(p.id)}
-                    />
-                  </td>
-                  <td style={styles.td}>
-                    {p.name}
-                    {p.mortgaged && (
-                      <span
-                        style={{
-                          color: "var(--danger-color)",
-                          marginLeft: "8px",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        (Cầm cố)
-                      </span>
-                    )}
-                  </td>
-                  <td style={styles.td}>{p.category}</td>
-                  <td style={styles.td}>{p.cost.toLocaleString()}</td>
-                  <td style={styles.td}>
-                    {p.mortgaged ? (
-                      <span
-                        style={{
-                          color: "var(--danger-color)",
-                          textDecoration: "line-through",
-                        }}
-                      >
-                        {p.income.usd} USD, {p.income.data} DATA
-                      </span>
-                    ) : (
-                      `${p.income.usd} USD, ${p.income.data} DATA, ${p.politics} Politics`
-                    )}
-                  </td>
-                  <td style={styles.td}>
-                    {!p.owned && rent && (
-                      <button
-                        style={{
-                          ...styles.button,
-                          ...styles.dangerButton,
-                          fontSize: "0.9rem",
-                          padding: "6px 10px",
-                        }}
-                        onClick={() => handleRentPayment(p.id)}
-                      >
-                        Trả {rentText}
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                return (
+                  <tr
+                    key={p.id}
+                    style={{
+                      backgroundColor: p.mortgaged
+                        ? "rgba(248, 81, 73, 0.1)"
+                        : "transparent",
+                    }}
+                  >
+                    <td style={styles.td}>
+                      <input
+                        type="checkbox"
+                        style={styles.ownedCheckbox}
+                        checked={p.owned}
+                        onChange={() => handleOwnershipChange(p.id)}
+                      />
+                    </td>
+                    <td style={styles.td}>
+                      {p.name}
+                      {p.mortgaged && (
+                        <span
+                          style={{
+                            color: "var(--danger-color)",
+                            marginLeft: "8px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          (Cầm cố)
+                        </span>
+                      )}
+                    </td>
+                    <td style={styles.td}>{p.category}</td>
+                    <td style={styles.td}>{p.cost.toLocaleString()}</td>
+                    <td style={styles.td}>
+                      {p.mortgaged ? (
+                        <span
+                          style={{
+                            color: "var(--danger-color)",
+                            textDecoration: "line-through",
+                          }}
+                        >
+                          {p.income.usd} USD, {p.income.data} DATA
+                        </span>
+                      ) : (
+                        `${p.income.usd} USD, ${p.income.data} DATA, ${p.politics} Politics`
+                      )}
+                    </td>
+                    <td style={styles.td}>
+                      {!p.owned && rent && (
+                        <button
+                          style={{
+                            ...styles.button,
+                            ...styles.dangerButton,
+                            fontSize: "0.9rem",
+                            padding: "6px 10px",
+                          }}
+                          onClick={() => handleRentPayment(p.id)}
+                        >
+                          Trả {rentText}
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </ResponsiveTable>
       </div>
 
       <InfrastructureBonusTable gameMode={gameMode} />

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Đế chế Độc quyền - Bảng Điều Khiển CEO</title>
+    <title>Đế Chế Độc Quyền</title>
     <link
       rel="icon"
       type="image/png"
@@ -93,6 +93,71 @@
         transform: none !important;
         box-shadow: none !important;
         filter: none !important;
+      }
+
+      /* --- Responsive Design --- */
+      @media (max-width: 900px) {
+        main > header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+        }
+
+        main > header > div:nth-of-type(3) {
+          /* headerControls */
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        main > nav {
+          gap: 0.5rem;
+        }
+      }
+
+      @media (max-width: 600px) {
+        body {
+          font-size: 15px;
+        }
+
+        #root {
+          padding: 0 0.5rem 0.5rem 0.5rem;
+        }
+
+        h1 {
+          font-size: 1.8rem !important;
+        }
+
+        main > header > div:nth-of-type(2) {
+          /* headerAssets */
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+
+        main > nav {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        main > nav > button {
+          text-align: center;
+        }
+
+        /* Target calculator buttons and display via their inline styles */
+        div[style*="padding: 20px"] {
+          padding: 15px !important;
+          font-size: 2.2rem !important;
+        }
+
+        button[style*="padding: 20px 0"] {
+          padding: 15px 0 !important;
+          font-size: 1.1rem !important;
+        }
+
+        /* Make modal smaller on mobile */
+        div[style*="max-width: 500px"] {
+          max-width: 95vw !important;
+          padding: 1.5rem !important;
+        }
       }
     </style>
     <script type="importmap">
