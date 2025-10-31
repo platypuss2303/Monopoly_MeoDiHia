@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đế chế Độc quyền - Bảng Điều Khiển CEO</title>
+    <style>
+      :root {
+        --bg-color: #0d1117;
+        --text-color: #c9d1d9;
+        --primary-color: #58a6ff;
+        --secondary-color: #161b22;
+        --border-color: #30363d;
+        --success-color: #3fb950;
+        --danger-color: #f85149;
+        --warning-color: #d29922;
+        --input-bg-color: #0d1117;
+      }
+      .light-theme {
+        --bg-color: #f6f8fa;
+        --text-color: #24292f;
+        --primary-color: #0969da;
+        --secondary-color: #ffffff;
+        --border-color: #d0d7de;
+        --success-color: #1a7f37;
+        --danger-color: #cf222e;
+        --warning-color: #9a6700;
+        --input-bg-color: #ffffff;
+      }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        transition: background-color 0.2s linear, color 0.2s linear;
+      }
+      #root {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem 1rem 1rem;
+      }
+
+      /* --- Button Effects --- */
+      button {
+        /* A base transition for all buttons */
+        transition: transform 0.1s ease-out, filter 0.1s ease-out,
+          box-shadow 0.15s ease-out;
+      }
+
+      /* --- General Buttons with a background --- */
+      /* Targets buttons with any background/backgroundColor, except 'none' */
+      button[style*="background"]:not([style*="background: none"]):hover:not(
+          :disabled
+        ) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        filter: brightness(1.15);
+      }
+
+      button[style*="background"]:not([style*="background: none"]):active:not(
+          :disabled
+        ) {
+        transform: translateY(0px);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        filter: brightness(0.95);
+      }
+
+      /* --- Modal Close Button --- */
+      /* Targets the 'X' button with 'background: none' */
+      button[style*="background: none"] {
+        transition: transform 0.1s ease-out, color 0.1s ease-out;
+      }
+
+      button[style*="background: none"]:hover:not(:disabled) {
+        transform: scale(1.15);
+        color: var(--primary-color);
+      }
+
+      /* --- Disabled State --- */
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+        transform: none !important;
+        box-shadow: none !important;
+        filter: none !important;
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "react/": "https://aistudiocdn.com/react@^19.2.0/",
+          "react": "https://aistudiocdn.com/react@^19.2.0",
+          "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
