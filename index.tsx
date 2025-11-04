@@ -581,18 +581,6 @@ const PENALTY_CONVERSION_RATES = {
   POLITICS_TO_DATA: { rate: 10, explanation: "Bù đắp DATA bằng POLITICS" },
 };
 
-const WIN_CONDITIONS = {
-  superMonopoly: [
-    "Kiểm soát Thị trường: Sở hữu tối thiểu 4 nhóm Thị trường Độc quyền.",
-    "Kiểm soát Chính trị: Đạt tối thiểu 15 điểm Ảnh hưởng Chính trị cố định.",
-    "Thống trị Toàn cầu: Tích lũy được 5 Điểm Thống trị Toàn cầu từ Ô Xuất khẩu Tư bản.",
-  ],
-  restructuring: [
-    "Vượt Khủng hoảng: Là người đầu tiên duy trì tổng tài sản ròng trên 3,000 USD sau khi Cơ chế Khủng hoảng Vĩ mô được kích hoạt.",
-    "Kiểm soát Nền tảng: Sở hữu toàn bộ 6 Ô Hạ tầng và Mạng lưới.",
-  ],
-};
-
 const useMediaQuery = (query) => {
   const [matches, setMatches] = useState(false);
 
@@ -1936,12 +1924,299 @@ const InvestigationTable = ({ gameMode, onApplyPenalty }) => (
   </div>
 );
 
+const GameRules = ({ gameMode }) => (
+  <div style={styles.widget}>
+    <h2 style={styles.widgetTitle}>🎲 Luật Chơi: Đế chế độc quyền</h2>
+
+    <h3>1. Mục Tiêu Trò Chơi (Điều kiện Thắng)</h3>
+    <p>
+      Mục tiêu là trở thành Đế chế Độc quyền tối thượng hoặc nhà tiên phong Tái
+      cấu trúc duy nhất còn lại trên bàn cờ.
+    </p>
+    <ResponsiveTable>
+      <table style={{ ...styles.propertyTable, textAlign: "left" }}>
+        <thead>
+          <tr>
+            <th style={styles.th}>Con Đường Chiến Thắng</th>
+            <th style={styles.th}>Điều kiện Thắng (Hoàn thành đồng thời)</th>
+            {gameMode === "politics" && (
+              <th style={styles.th}>Phản ánh Lý luận</th>
+            )}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style={styles.td}>
+              <strong>A. Siêu Độc Quyền (Ngay lập tức)</strong>
+            </td>
+            <td style={styles.td}>
+              <ol style={{ paddingLeft: "20px", margin: 0 }}>
+                <li>
+                  Kiểm soát Thị trường: Sở hữu tối thiểu 4/5 nhóm Thị trường Độc
+                  quyền (ví dụ: 12/15 ô). VÀ
+                </li>
+                <li>
+                  Kiểm soát Chính trị: Đạt tối thiểu 15 điểm Ảnh hưởng Chính trị
+                  cố định. VÀ
+                </li>
+                <li>
+                  Tài sản Ròng cao nhất: Có tổng giá trị tài sản ròng (USD +
+                  DATA quy đổi + Tài sản cố định) cao nhất.
+                </li>
+              </ol>
+            </td>
+            {gameMode === "politics" && (
+              <td style={{ ...styles.td, fontStyle: "italic" }}>
+                <ul
+                  style={{
+                    paddingLeft: "20px",
+                    margin: 0,
+                    listStyle: "disc",
+                  }}
+                >
+                  <li>
+                    Đỉnh cao của Tập trung Tư bản và Phân chia Thị trường.
+                  </li>
+                  <li>
+                    Biểu hiện của Độc quyền Nhà nước (hòa quyện quyền lực).
+                  </li>
+                  <li>Sự thống trị của giới đầu sỏ.</li>
+                </ul>
+              </td>
+            )}
+          </tr>
+          <tr>
+            <td style={styles.td}>
+              <strong>
+                B. Thích nghi & Tái cấu trúc (Chỉ sau Khủng hoảng)
+              </strong>
+            </td>
+            <td style={styles.td}>
+              <ol style={{ paddingLeft: "20px", margin: 0 }}>
+                <li>
+                  Vượt Khủng hoảng: Là người đầu tiên duy trì tổng tài sản ròng
+                  trên một ngưỡng nhất định (ví dụ: 3,000 USD) sau khi Cơ chế
+                  Khủng hoảng Vĩ mô được kích hoạt. VÀ
+                </li>
+                <li>
+                  Kiểm soát Nền tảng: Sở hữu toàn bộ 8 Ô Hạ tầng và Mạng lưới.
+                </li>
+              </ol>
+            </td>
+            {gameMode === "politics" && (
+              <td style={{ ...styles.td, fontStyle: "italic" }}>
+                <ul
+                  style={{
+                    paddingLeft: "20px",
+                    margin: 0,
+                    listStyle: "disc",
+                  }}
+                >
+                  <li>Vượt qua Giới hạn Lịch sử và tự phủ định.</li>
+                  <li>
+                    Kiểm soát phương tiện sản xuất/lưu thông để thiết lập trật
+                    tự mới.
+                  </li>
+                </ul>
+              </td>
+            )}
+          </tr>
+        </tbody>
+      </table>
+    </ResponsiveTable>
+
+    <h3 style={{ marginTop: "2rem" }}>2. Các Yếu tố Cốt Lõi</h3>
+    <ResponsiveTable>
+      <table style={{ ...styles.propertyTable, textAlign: "left" }}>
+        <thead>
+          <tr>
+            <th style={styles.th}>Yếu tố</th>
+            <th style={styles.th}>Đơn vị / Phạm vi</th>
+            <th style={styles.th}>Vai trò trong Gameplay</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style={styles.td}>Tiền tệ (3 loại)</td>
+            <td style={styles.td}>
+              USD (Tiền mặt), DATA (Dữ liệu), Ảnh hưởng Chính trị (POLITICS
+              Score)
+            </td>
+            <td style={styles.td}>
+              Mua ô, chi phí vận hành, nộp phạt, vận động hành lang.
+            </td>
+          </tr>
+          <tr>
+            <td style={styles.td}>Bản đồ</td>
+            <td style={styles.td}>
+              40 Ô (15 Độc quyền, 8 Hạ tầng, 4 Tài chính, 4 Chính phủ, 6 Khủng
+              hoảng/Kiểm soát, 3 Sự kiện/Khí vận).
+            </td>
+            <td style={styles.td}>
+              Địa điểm để tích lũy, xây dựng, và đối mặt rủi ro.
+            </td>
+          </tr>
+          <tr>
+            <td style={styles.td}>Thẻ</td>
+            <td style={styles.td}>
+              20 Thẻ Sự kiện (Vĩ mô, Khách quan) & 20 Thẻ Khí vận (Vi mô, Chủ
+              quan)
+            </td>
+            <td style={styles.td}>
+              Tạo ra sự biến động chính trị—kinh tế, khủng hoảng và cơ hội ngẫu
+              nhiên.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ResponsiveTable>
+
+    <h3 style={{ marginTop: "2rem" }}>3. Cơ chế Khởi đầu và Di chuyển</h3>
+    <p>
+      <strong>Khởi đầu:</strong> Mỗi người chơi chọn một CEO, nhận một lượng USD
+      (1,500 USD), DATA (100 DATA), và Ảnh hưởng Chính trị (5 điểm) ban đầu.
+    </p>
+    <p>
+      <strong>Lượt chơi:</strong> Gieo 2 xúc xắc, di chuyển theo số điểm, thực
+      hiện hành động tại ô dừng.
+    </p>
+    <p>
+      <strong>Ô Bắt đầu:</strong> Khi đi qua hoặc dừng tại Ô Bắt đầu, nhận Lương
+      cơ bản (200 USD, 10 DATA).
+    </p>
+
+    <h3 style={{ marginTop: "2rem" }}>4. Hành động tại các Loại Ô</h3>
+    <ResponsiveTable>
+      <table style={{ ...styles.propertyTable, textAlign: "left" }}>
+        <thead>
+          <tr>
+            <th style={styles.th}>Loại Ô</th>
+            <th style={styles.th}>Quy tắc Cơ bản</th>
+            <th style={styles.th}>Phí thuê/Lợi nhuận</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style={styles.td}>Thị trường Độc quyền (15)</td>
+            <td style={styles.td}>
+              Mua/Xây dựng: Người chơi có thể mua. Khi người chơi sở hữu toàn bộ
+              ô trong một nhóm (3 ô), độc quyền được hình thành và phí thuê được
+              nhân 3.
+            </td>
+            <td style={styles.td}>
+              Người chơi khác dừng: Trả phí thuê (USD). Người sở hữu dừng: Thu
+              DATA và USD lợi nhuận cơ bản.
+            </td>
+          </tr>
+          <tr>
+            <td style={styles.td}>Hạ tầng & Mạng lưới (8)</td>
+            <td style={styles.td}>
+              Mua/Xây dựng: Tăng cường Tích lũy DATA và cấp Bonus Chiến lược (ví
+              dụ: giảm chi phí ở ô khác, tăng điểm Ảnh hưởng Chính trị cố định).
+            </td>
+            <td style={styles.td}>
+              Người chơi khác dừng: Trả phí thuê USD/DATA. Người sở hữu dừng:
+              Thu DATA cố định.
+            </td>
+          </tr>
+          <tr>
+            <td style={styles.td}>Ô Chính phủ & Quy chế (4)</td>
+            <td style={styles.td}>
+              Lobbying/Hợp đồng: Dùng Ảnh hưởng Chính trị để mua Ưu đãi (ví dụ:
+              giảm thuế) hoặc mua DATA từ khu vực công.
+            </td>
+            <td style={styles.td}>Chi phí là Ảnh hưởng Chính trị hoặc USD.</td>
+          </tr>
+          <tr>
+            <td style={styles.td}>Ô Tài chính & Tư bản (4)</td>
+            <td style={styles.td}>
+              Vay/Gửi: Vay USD hoặc DATA với lãi suất cao. Công ty Offshore:
+              Dùng để cất giấu USD/DATA khỏi bị điều tra.
+            </td>
+            <td style={styles.td}>Lãi suất vay cao (15%).</td>
+          </tr>
+          <tr>
+            <td style={styles.td}>Thẻ Sự kiện / Khí vận (6 ô)</td>
+            <td style={styles.td}>
+              Rút thẻ: Rút và thực hiện theo hướng dẫn của Thẻ Sự kiện (tác động
+              ALL) hoặc Thẻ Khí vận (tác động PC).
+            </td>
+            <td style={styles.td}>
+              Tác động chủ yếu là biến động tài sản (USD, DATA, POLITICS).
+            </td>
+          </tr>
+          <tr>
+            <td style={styles.td}>Ô Khủng hoảng & Kiểm soát (6)</td>
+            <td style={styles.td}>
+              Ô Bị Điều tra: Phải nộp phạt (USD/DATA). Có thể dùng Ảnh hưởng
+              Chính trị để giảm/thoát án. Ô Giới hạn Lịch sử: Kích hoạt Cơ chế
+              Khủng hoảng Vĩ mô (xem mục 5).
+            </td>
+            <td style={styles.td}>
+              Trả phạt bằng USD/DATA/Ảnh hưởng Chính trị.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ResponsiveTable>
+
+    <h3 style={{ marginTop: "2rem" }}>
+      5. Cơ chế Khủng hoảng Vĩ mô (Giới hạn Lịch sử)
+    </h3>
+    <p>
+      Cơ chế này được kích hoạt khi một người chơi dừng tại Ô Giới hạn Lịch sử
+      hoặc khi tổng tài sản độc quyền của tất cả người chơi đạt ngưỡng 15,000
+      USD (phản ánh độc quyền phát triển tột cùng).
+    </p>
+    <ul style={{ paddingLeft: "20px", listStyle: "disc", marginTop: 0 }}>
+      <li>
+        <strong>Rút Thẻ Khủng hoảng:</strong> Rút một Thẻ Sự kiện lớn (ví dụ:
+        Khủng hoảng Tài chính Lớn).
+      </li>
+      <li>
+        <strong>Tác động:</strong> Tất cả người chơi chịu tác động tiêu cực đồng
+        thời (ví dụ: Mất 20% USD, giảm 2 điểm Ảnh hưởng Chính trị).
+      </li>
+      <li>
+        <strong>Điều kiện Thắng B được mở khóa:</strong> Bắt đầu tính toán con
+        đường Thích nghi & Tái cấu trúc.
+      </li>
+    </ul>
+
+    <h3 style={{ marginTop: "2rem" }}>
+      6. Xử lý Thiếu hụt Tài sản (Điều kiện Thua)
+    </h3>
+    <p>
+      Khi một thẻ yêu cầu chi phí (USD, DATA, Ảnh hưởng Chính trị) mà người chơi
+      không đáp ứng đủ, áp dụng theo thứ tự ưu tiên sau:
+    </p>
+    <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+      <li>
+        <strong>Quy đổi Bắt buộc:</strong> Bắt buộc quy đổi tài sản khác sang
+        đơn vị đang thiếu theo tỷ lệ bất lợi (ví dụ: 1 Ảnh hưởng Chính trị → 100
+        USD).
+      </li>
+      <li>
+        <strong>Cầm cố/Vay nợ:</strong> Cầm cố Ô Thị trường/Hạ tầng (nhận 50%
+        giá trị, mất lợi nhuận cho đến khi chuộc lại) hoặc vay nợ từ Ngân hàng
+        (+ lãi suất 25%).
+      </li>
+      <li>
+        <strong>Phá sản:</strong> Nếu sau khi quy đổi và cầm cố/vay nợ vẫn không
+        thể trả đủ nợ hoặc nộp phạt, người chơi bị tuyên bố Phá sản và bị loại
+        khỏi trò chơi.
+      </li>
+    </ol>
+  </div>
+);
+
 const Reference_Hub = ({
   playerState,
   setPlayerState,
   gameMode,
   addLogEntry,
 }) => {
+  const [activeRefTab, setActiveRefTab] = useState("assets");
   const [penaltyModalState, setPenaltyModalState] = useState({
     isOpen: false,
     square: null,
@@ -2215,156 +2490,166 @@ const Reference_Hub = ({
 
   return (
     <div>
-      <PenaltyModal
-        isOpen={penaltyModalState.isOpen}
-        square={penaltyModalState.square}
-        playerState={playerState}
-        onClose={handleClosePenaltyModal}
-        onConfirm={handleConfirmPenalty}
-      />
-      <div style={styles.widget}>
-        <h2 style={styles.widgetTitle}>Danh mục Tài sản Doanh nghiệp</h2>
-        <ResponsiveTable>
-          <table style={styles.propertyTable}>
-            <thead>
-              <tr>
-                <th style={styles.th}>Sở hữu</th>
-                <th style={styles.th}>Tên</th>
-                <th style={styles.th}>Loại</th>
-                <th style={styles.th}>Chi phí (USD)</th>
-                <th style={styles.th}>Lợi nhuận / Ảnh hưởng</th>
-                <th style={styles.th}>Phí Thuê</th>
-              </tr>
-            </thead>
-            <tbody>
-              {playerState.properties.map((p) => {
-                const rent = p.rent;
-                let rentText = "";
-                if (rent) {
-                  if (typeof rent === "number") {
-                    rentText = `${rent.toLocaleString()} USD`;
-                  } else if (typeof rent === "object" && rent !== null) {
-                    const parts = [];
-                    if (rent.usd)
-                      parts.push(`${rent.usd.toLocaleString()} USD`);
-                    if (rent.data)
-                      parts.push(`${rent.data.toLocaleString()} DATA`);
-                    rentText = parts.join(" & ");
-                  }
-                }
+      <nav style={styles.tabs}>
+        <button
+          style={{
+            ...styles.tabButton,
+            ...(activeRefTab === "assets" && styles.activeTab),
+          }}
+          onClick={() => setActiveRefTab("assets")}
+        >
+          Dữ liệu & Tài sản
+        </button>
+        <button
+          style={{
+            ...styles.tabButton,
+            ...(activeRefTab === "rules" && styles.activeTab),
+          }}
+          onClick={() => setActiveRefTab("rules")}
+        >
+          Luật Chơi
+        </button>
+      </nav>
 
-                return (
-                  <tr
-                    key={p.id}
-                    style={{
-                      backgroundColor: p.mortgaged
-                        ? "rgba(248, 81, 73, 0.1)"
-                        : "transparent",
-                    }}
-                  >
-                    <td style={styles.td}>
-                      <input
-                        type="checkbox"
-                        style={styles.ownedCheckbox}
-                        checked={p.owned}
-                        onChange={() => handleOwnershipChange(p.id)}
-                      />
-                    </td>
-                    <td style={styles.td}>
-                      {p.name}
-                      {p.mortgaged && (
-                        <span
-                          style={{
-                            color: "var(--danger-color)",
-                            marginLeft: "8px",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          (Cầm cố)
-                        </span>
-                      )}
-                    </td>
-                    <td style={styles.td}>{p.category}</td>
-                    <td style={styles.td}>{p.cost.toLocaleString()}</td>
-                    <td style={styles.td}>
-                      {p.mortgaged ? (
-                        <span
-                          style={{
-                            color: "var(--danger-color)",
-                            textDecoration: "line-through",
-                          }}
-                        >
-                          {p.income.usd} USD, {p.income.data} DATA
-                        </span>
-                      ) : (
-                        `${p.income.usd} USD, ${p.income.data} DATA, ${p.politics} Politics`
-                      )}
-                    </td>
-                    <td style={styles.td}>
-                      {!p.owned && rent && (
-                        <button
-                          style={{
-                            ...styles.button,
-                            ...styles.dangerButton,
-                            fontSize: "0.9rem",
-                            padding: "6px 10px",
-                          }}
-                          onClick={() => handleRentPayment(p.id)}
-                        >
-                          Trả {rentText}
-                        </button>
-                      )}
-                    </td>
+      {activeRefTab === "rules" && <GameRules gameMode={gameMode} />}
+
+      {activeRefTab === "assets" && (
+        <>
+          <PenaltyModal
+            isOpen={penaltyModalState.isOpen}
+            square={penaltyModalState.square}
+            playerState={playerState}
+            onClose={handleClosePenaltyModal}
+            onConfirm={handleConfirmPenalty}
+          />
+          <div style={styles.widget}>
+            <h2 style={styles.widgetTitle}>Danh mục Tài sản Doanh nghiệp</h2>
+            <ResponsiveTable>
+              <table style={styles.propertyTable}>
+                <thead>
+                  <tr>
+                    <th style={styles.th}>Sở hữu</th>
+                    <th style={styles.th}>Tên</th>
+                    <th style={styles.th}>Loại</th>
+                    <th style={styles.th}>Chi phí (USD)</th>
+                    <th style={styles.th}>Lợi nhuận / Ảnh hưởng</th>
+                    <th style={styles.th}>Phí Thuê</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </ResponsiveTable>
-      </div>
+                </thead>
+                <tbody>
+                  {playerState.properties.map((p) => {
+                    const rent = p.rent;
+                    let rentText = "";
+                    if (rent) {
+                      if (typeof rent === "number") {
+                        rentText = `${rent.toLocaleString()} USD`;
+                      } else if (typeof rent === "object" && rent !== null) {
+                        const parts = [];
+                        if (rent.usd)
+                          parts.push(`${rent.usd.toLocaleString()} USD`);
+                        if (rent.data)
+                          parts.push(`${rent.data.toLocaleString()} DATA`);
+                        rentText = parts.join(" & ");
+                      }
+                    }
 
-      <InfrastructureBonusTable gameMode={gameMode} />
-
-      <FinancialCapitalTable gameMode={gameMode} />
-
-      <GovernmentRegulationTable gameMode={gameMode} />
-
-      <GlobalStrategyTable gameMode={gameMode} />
-
-      <InvestigationTable gameMode={gameMode} onApplyPenalty={triggerPenalty} />
-
-      <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
-        <CardList
-          title="⚡ Thẻ Sự kiện"
-          cards={EVENT_CARDS}
-          gameMode={gameMode}
-        />
-        <CardList
-          title="🍀 Thẻ Khí vận"
-          cards={FORTUNE_CARDS}
-          gameMode={gameMode}
-        />
-      </div>
-      <div style={styles.widget}>
-        <h2 style={styles.widgetTitle}>Quy tắc & Điều kiện</h2>
-        <div style={styles.grid}>
-          <div>
-            <h3>Điều kiện Thắng</h3>
-            <strong>Siêu Độc Quyền:</strong>
-            <ul>
-              {WIN_CONDITIONS.superMonopoly.map((c) => (
-                <li key={c}>{c}</li>
-              ))}
-            </ul>
-            <strong>Tái cấu trúc:</strong>
-            <ul>
-              {WIN_CONDITIONS.restructuring.map((c) => (
-                <li key={c}>{c}</li>
-              ))}
-            </ul>
+                    return (
+                      <tr
+                        key={p.id}
+                        style={{
+                          backgroundColor: p.mortgaged
+                            ? "rgba(248, 81, 73, 0.1)"
+                            : "transparent",
+                        }}
+                      >
+                        <td style={styles.td}>
+                          <input
+                            type="checkbox"
+                            style={styles.ownedCheckbox}
+                            checked={p.owned}
+                            onChange={() => handleOwnershipChange(p.id)}
+                          />
+                        </td>
+                        <td style={styles.td}>
+                          {p.name}
+                          {p.mortgaged && (
+                            <span
+                              style={{
+                                color: "var(--danger-color)",
+                                marginLeft: "8px",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              (Cầm cố)
+                            </span>
+                          )}
+                        </td>
+                        <td style={styles.td}>{p.category}</td>
+                        <td style={styles.td}>{p.cost.toLocaleString()}</td>
+                        <td style={styles.td}>
+                          {p.mortgaged ? (
+                            <span
+                              style={{
+                                color: "var(--danger-color)",
+                                textDecoration: "line-through",
+                              }}
+                            >
+                              {p.income.usd} USD, {p.income.data} DATA
+                            </span>
+                          ) : (
+                            `${p.income.usd} USD, ${p.income.data} DATA, ${p.politics} Politics`
+                          )}
+                        </td>
+                        <td style={styles.td}>
+                          {!p.owned && rent && (
+                            <button
+                              style={{
+                                ...styles.button,
+                                ...styles.dangerButton,
+                                fontSize: "0.9rem",
+                                padding: "6px 10px",
+                              }}
+                              onClick={() => handleRentPayment(p.id)}
+                            >
+                              Trả {rentText}
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </ResponsiveTable>
           </div>
-        </div>
-      </div>
+
+          <InfrastructureBonusTable gameMode={gameMode} />
+
+          <FinancialCapitalTable gameMode={gameMode} />
+
+          <GovernmentRegulationTable gameMode={gameMode} />
+
+          <GlobalStrategyTable gameMode={gameMode} />
+
+          <InvestigationTable
+            gameMode={gameMode}
+            onApplyPenalty={triggerPenalty}
+          />
+
+          <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
+            <CardList
+              title="⚡ Thẻ Sự kiện"
+              cards={EVENT_CARDS}
+              gameMode={gameMode}
+            />
+            <CardList
+              title="🍀 Thẻ Khí vận"
+              cards={FORTUNE_CARDS}
+              gameMode={gameMode}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };
